@@ -144,7 +144,7 @@ Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  7.0.7
-Release:  1%{?dist}
+Release:  2%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -179,10 +179,12 @@ Patch43: php-5.4.0-phpize.centos.patch
 # cPanel patches
 #Patch100: php-7.x-mail-header.cpanel.patch
 Patch101: php-7.x-disable-zts.cpanel.patch
+Patch102: php-7.0.x-ea4-ini.patch
 # Factory is droped from system tzdata
 #Patch300: php-5.6.3-datetests.centos.patch
 # Revert changes for pcre < 8.34
 #Patch301: php-7.0.0-oldpcre.centos.patch
+
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -942,6 +944,7 @@ inside them.
 %patch43 -p1 -b .phpize
 #%patch100 -p1 -b .cpanelmailheader
 %patch101 -p1 -b .disablezts
+%patch102 -p1 -b .cpanelea4ini
 
 # Fixes for tests
 #%patch300 -p1 -b .datetests
@@ -1805,6 +1808,9 @@ fi
 
 
 %changelog
+* Mon Jun 13 2016 Jacob Perkins <jacob.perkins@cpanel.net> - 7.0.7-2
+- Added EasyApache 3 backwards compatibility php.ini patch (EA-4666)
+
 * Thu May 26 2016 Kurt Newman <kurt.newman@cpanel.net> - 7.0.7-1
 - Updated to version 7.0.7 via update_pkg.pl (EA-4628)
 
