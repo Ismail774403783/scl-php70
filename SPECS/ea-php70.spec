@@ -17,8 +17,6 @@
 %global apiver      20151012
 %global zendver     20151012
 %global pdover      20150127
-# Extension version
-%global opcachever  7.0.6-dev
 
 # Adds -z now to the linker flags
 %global _hardened_build 1
@@ -143,9 +141,9 @@
 Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
-Version:  7.0.7
+Version:  7.0.8
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 4
+%define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -391,10 +389,10 @@ Summary:   The Zend OPcache
 Group:     Development/Languages
 License:   PHP
 Requires:  %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
-Provides:  %{?scl_prefix}php-pecl-zendopcache = %{opcachever}
-Provides:  %{?scl_prefix}php-pecl-zendopcache%{?_isa} = %{opcachever}
-Provides:  %{?scl_prefix}php-pecl(opcache) = %{opcachever}
-Provides:  %{?scl_prefix}php-pecl(opcache)%{?_isa} = %{opcachever}
+Provides:  %{?scl_prefix}php-pecl-zendopcache = %{version}-%{release}
+Provides:  %{?scl_prefix}php-pecl-zendopcache%{?_isa} = %{version}-%{release}
+Provides:  %{?scl_prefix}php-pecl(opcache) = %{version}-%{release}
+Provides:  %{?scl_prefix}php-pecl(opcache)%{?_isa} = %{version}-%{release}
 
 %description opcache
 The Zend OPcache provides faster PHP execution through opcode caching and
@@ -1020,14 +1018,6 @@ vpdo=`awk '/^#define PDO_DRIVER_API/ { print $3 } ' ext/pdo/php_pdo_driver.h`
 if test "x${vpdo}" != "x%{pdover}"; then
    : Error: Upstream PDO ABI version is now ${vpdo}, expecting %{pdover}.
    : Update the pdover macro and rebuild.
-   exit 1
-fi
-
-# Check for some extension version
-ver=$(sed -n '/#define PHP_ZENDOPCACHE_VERSION /{s/.*\s"//;s/".*$//;p}' ext/opcache/ZendAccelerator.h)
-if test "$ver" != "%{opcachever}"; then
-   : Error: Upstream PHP_ZENDOPCACHE_VERSION version is now ${ver}, expecting %{opcachever}.
-   : Update the opcachever macro and rebuild.
    exit 1
 fi
 
@@ -1801,6 +1791,10 @@ fi
 
 
 %changelog
+* Mon Jun 27 2016 Daniel Muey <dan@cpanel.net> - 7.0.8-1
+- Updated to version 7.0.8 via update_pkg.pl (EA-4738)
+- Remove opcache check since it was removed in d41920c (EA-4755)
+
 * Mon Jun 20 2016 Dan Muey <dan@cpanel.net> - 7.0.7-4
 - EA-4383: Update Release value to OBS-proof versioning
 
