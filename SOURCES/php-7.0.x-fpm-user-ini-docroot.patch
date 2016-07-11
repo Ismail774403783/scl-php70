@@ -1,5 +1,6 @@
---- sapi/fpm/fpm/fpm_main.c	2016-07-11 08:27:38.288836235 -0500
-+++ sapi/fpm/fpm/fpm_main.c	2016-07-11 08:28:23.822836231 -0500
+diff --git php-7.0.8/sapi/fpm/fpm/fpm_main.c php-7.0.8/sapi/fpm/fpm/fpm_main.c
+--- php-7.0.8/sapi/fpm/fpm/fpm_main.c	2016-06-21 14:56:41.000000000 -0500
++++ php-7.0.8/sapi/fpm/fpm/fpm_main.c	2016-07-11 08:47:24.737835793 -0500
 @@ -684,6 +684,9 @@
  
  	/* Check whether cache entry has expired and rescan if it is */
