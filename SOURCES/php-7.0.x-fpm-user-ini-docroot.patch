@@ -1,8 +1,6 @@
-diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
-index d12ac01..dd05f03 100644
---- a/sapi/fpm/fpm/fpm_main.c
-+++ b/sapi/fpm/fpm/fpm_main.c
-@@ -715,6 +715,9 @@ static void php_cgi_ini_activate_user_config(char *path, int path_len, const cha
+--- sapi/fpm/fpm/fpm_main.c	2016-07-11 08:27:38.288836235 -0500
++++ sapi/fpm/fpm/fpm_main.c	2016-07-11 08:28:23.822836231 -0500
+@@ -684,6 +684,9 @@
  
  	/* Check whether cache entry has expired and rescan if it is */
  	if (request_time > entry->expires) {
@@ -12,7 +10,7 @@ index d12ac01..dd05f03 100644
  		char * real_path;
  		int real_path_len;
  		char *s1, *s2;
-@@ -743,6 +746,15 @@ static void php_cgi_ini_activate_user_config(char *path, int path_len, const cha
+@@ -712,6 +715,15 @@
  			s_len = path_len;
  		}
  
@@ -26,5 +24,5 @@ index d12ac01..dd05f03 100644
 +			return;
 +
  		/* we have to test if path is part of DOCUMENT_ROOT.
- 		  if it is inside the docroot, we scan the tree up to the docroot 
+ 		  if it is inside the docroot, we scan the tree up to the docroot
  			to find more user.ini, if not we only scan the current path.
