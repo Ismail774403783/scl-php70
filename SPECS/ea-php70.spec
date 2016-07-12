@@ -143,7 +143,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  7.0.8
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 1
+%define release_prefix 3
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -185,7 +185,7 @@ Patch102: php-7.0.x-ea4-ini.patch
 # Revert changes for pcre < 8.34
 #Patch301: php-7.0.0-oldpcre.centos.patch
 
-
+Patch104: php-7.0.x-fpm-user-ini-docroot.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -944,6 +944,8 @@ inside them.
 #%patch100 -p1 -b .cpanelmailheader
 %patch101 -p1 -b .disablezts
 %patch102 -p1 -b .cpanelea4ini
+%patch104 -p1 -b .fpmuserini
+
 
 # Fixes for tests
 #%patch300 -p1 -b .datetests
@@ -1791,6 +1793,12 @@ fi
 
 
 %changelog
+* Fri Jul 08 2016 Darren Mobley <darren@cpanel.net> - 7.0.8-3
+- Added application of previous patch to spec file
+
+* Thu Jun 30 2016 Julian Brown <julian.brown@cpanel.net> - 7.0.8-2
+- Disallow php-fpm from loading .user.ini files outside of homedir
+
 * Mon Jun 27 2016 Daniel Muey <dan@cpanel.net> - 7.0.8-1
 - Updated to version 7.0.8 via update_pkg.pl (EA-4738)
 - Remove opcache check since it was removed in d41920c (EA-4755)
