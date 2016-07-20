@@ -17,8 +17,6 @@
 %global apiver      20151012
 %global zendver     20151012
 %global pdover      20150127
-# Extension version
-%global opcachever  7.0.6-dev
 
 # Adds -z now to the linker flags
 %global _hardened_build 1
@@ -143,8 +141,10 @@
 Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
-Version:  7.0.7
-Release:  1%{?dist}
+Version:  7.0.8
+# Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
+%define release_prefix 3
+Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -179,11 +179,13 @@ Patch43: php-5.4.0-phpize.centos.patch
 # cPanel patches
 #Patch100: php-7.x-mail-header.cpanel.patch
 Patch101: php-7.x-disable-zts.cpanel.patch
+Patch102: php-7.0.x-ea4-ini.patch
 # Factory is droped from system tzdata
 #Patch300: php-5.6.3-datetests.centos.patch
 # Revert changes for pcre < 8.34
 #Patch301: php-7.0.0-oldpcre.centos.patch
 
+Patch104: php-7.0.x-fpm-user-ini-docroot.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -229,7 +231,6 @@ Provides: %{?scl_prefix}mod_php = %{version}-%{release}
 Provides: ea-mod_php = %{embed_version}
 Conflicts: ea-mod_php > %{embed_version}, ea-mod_php < %{embed_version}
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
-# To ensure correct /var/lib/php/session ownership:
 Requires(pre): ea-webserver
 Requires: ea-apache24-mpm = forked
 %endif
@@ -388,10 +389,10 @@ Summary:   The Zend OPcache
 Group:     Development/Languages
 License:   PHP
 Requires:  %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
-Provides:  %{?scl_prefix}php-pecl-zendopcache = %{opcachever}
-Provides:  %{?scl_prefix}php-pecl-zendopcache%{?_isa} = %{opcachever}
-Provides:  %{?scl_prefix}php-pecl(opcache) = %{opcachever}
-Provides:  %{?scl_prefix}php-pecl(opcache)%{?_isa} = %{opcachever}
+Provides:  %{?scl_prefix}php-pecl-zendopcache = %{version}-%{release}
+Provides:  %{?scl_prefix}php-pecl-zendopcache%{?_isa} = %{version}-%{release}
+Provides:  %{?scl_prefix}php-pecl(opcache) = %{version}-%{release}
+Provides:  %{?scl_prefix}php-pecl(opcache)%{?_isa} = %{version}-%{release}
 
 %description opcache
 The Zend OPcache provides faster PHP execution through opcode caching and
@@ -942,6 +943,9 @@ inside them.
 %patch43 -p1 -b .phpize
 #%patch100 -p1 -b .cpanelmailheader
 %patch101 -p1 -b .disablezts
+%patch102 -p1 -b .cpanelea4ini
+%patch104 -p1 -b .fpmuserini
+
 
 # Fixes for tests
 #%patch300 -p1 -b .datetests
@@ -1016,14 +1020,6 @@ vpdo=`awk '/^#define PDO_DRIVER_API/ { print $3 } ' ext/pdo/php_pdo_driver.h`
 if test "x${vpdo}" != "x%{pdover}"; then
    : Error: Upstream PDO ABI version is now ${vpdo}, expecting %{pdover}.
    : Update the pdover macro and rebuild.
-   exit 1
-fi
-
-# Check for some extension version
-ver=$(sed -n '/#define PHP_ZENDOPCACHE_VERSION /{s/.*\s"//;s/".*$//;p}' ext/opcache/ZendAccelerator.h)
-if test "$ver" != "%{opcachever}"; then
-   : Error: Upstream PHP_ZENDOPCACHE_VERSION version is now ${ver}, expecting %{opcachever}.
-   : Update the opcachever macro and rebuild.
    exit 1
 fi
 
@@ -1378,10 +1374,7 @@ ln -s %{_httpd_moddir}/libphp7.so      $RPM_BUILD_ROOT%{_root_httpd_moddir}/libp
 %endif
 
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
-install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
-install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
-install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/wsdlcache
-install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/opcache
+install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib
 
 %if %{with_lsws}
 install -m 755 build-apache/sapi/litespeed/php $RPM_BUILD_ROOT%{_bindir}/lsphp
@@ -1654,8 +1647,6 @@ fi
 #%dir %{_libdir}/apache2/modules
 %{_root_httpd_moddir}/libphp7.so
 %endif
-%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
-%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/wsdlcache
 %{_httpd_contentdir}/icons/%{name}.gif
 %endif
 
@@ -1670,7 +1661,7 @@ fi
 %dir %{_sysconfdir}/php.d
 %dir %{_libdir}/php
 %dir %{_libdir}/php/modules
-%dir %{_localstatedir}/lib/php
+%dir %{_localstatedir}/lib
 %dir %{_datadir}/php
 
 %files cli
@@ -1701,9 +1692,6 @@ fi
 %defattr(-,root,root)
 %doc php-fpm.conf.default
 %license fpm_LICENSE
-%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
-%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/wsdlcache
-%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/opcache
 %config(noreplace) %{_sysconfdir}/php-fpm.conf
 %config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf.example
 %config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf.default
@@ -1805,6 +1793,26 @@ fi
 
 
 %changelog
+* Fri Jul 08 2016 Darren Mobley <darren@cpanel.net> - 7.0.8-3
+- Added application of previous patch to spec file
+
+* Thu Jun 30 2016 Julian Brown <julian.brown@cpanel.net> - 7.0.8-2
+- Disallow php-fpm from loading .user.ini files outside of homedir
+
+* Mon Jun 27 2016 Daniel Muey <dan@cpanel.net> - 7.0.8-1
+- Updated to version 7.0.8 via update_pkg.pl (EA-4738)
+- Remove opcache check since it was removed in d41920c (EA-4755)
+
+* Mon Jun 20 2016 Dan Muey <dan@cpanel.net> - 7.0.7-4
+- EA-4383: Update Release value to OBS-proof versioning
+
+* Tue Jun 14 2016 S. Kurt Newman <kurt.newman@cpanel.net> - 7.0.7-3
+- Removed unused global wsdl, session, and opcache cache
+  directories (EA-4689)
+
+* Mon Jun 13 2016 Jacob Perkins <jacob.perkins@cpanel.net> - 7.0.7-2
+- Added EasyApache 3 backwards compatibility php.ini patch (EA-4666)
+
 * Thu May 26 2016 Kurt Newman <kurt.newman@cpanel.net> - 7.0.7-1
 - Updated to version 7.0.7 via update_pkg.pl (EA-4628)
 
