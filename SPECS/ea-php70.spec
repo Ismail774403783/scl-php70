@@ -141,7 +141,7 @@
 Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
-Version:  7.0.9
+Version:  7.0.10
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
 %define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
@@ -151,6 +151,7 @@ Release: %{release_prefix}%{?dist}.cpanel
 License:  PHP and Zend and BSD
 Group:    Development/Languages
 URL:      http://www.php.net/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0: http://www.php.net/distributions/php-%{version}%{?rcver}.tar.bz2
 Source2: php.ini
@@ -176,18 +177,18 @@ Patch42: php-7.0.0-systzdata-v13.centos.patch
 # stuff for a production machine: https://bugzilla.redhat.com/show_bug.cgi?id=657812
 Patch43: php-5.4.0-phpize.centos.patch
 
+################
 # cPanel patches
-#Patch100: php-7.x-mail-header.cpanel.patch
+################
+
+# This is a patch needed by cpanel & whm to detect nobody senders (FB-62627)
+Patch100: php-7.0.x-mail-header.cpanel.patch
+# We don't compile a thread-safe PHP.  If you want speed, use FPM instead.
+# Also, disabling zts ensures that our build env (which uses worker, a threaded mpm)
+# doesn't contaminate the non-thread-safe build of php binaries.
 Patch101: php-7.x-disable-zts.cpanel.patch
 Patch102: php-7.0.x-ea4-ini.patch
-# Factory is droped from system tzdata
-#Patch300: php-5.6.3-datetests.centos.patch
-# Revert changes for pcre < 8.34
-#Patch301: php-7.0.0-oldpcre.centos.patch
-
 Patch104: php-7.0.x-fpm-user-ini-docroot.patch
-
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: bzip2-devel, curl-devel >= 7.9, %{db_devel}
 BuildRequires: pam-devel
@@ -941,20 +942,11 @@ inside them.
 %patch7 -p1 -b .recode
 %patch42 -p1 -b .systzdata
 %patch43 -p1 -b .phpize
-#%patch100 -p1 -b .cpanelmailheader
+%patch100 -p1 -b .mailheader
 %patch101 -p1 -b .disablezts
 %patch102 -p1 -b .cpanelea4ini
 %patch104 -p1 -b .fpmuserini
 
-
-# Fixes for tests
-#%patch300 -p1 -b .datetests
-#%if %{with_libpcre}
-#if ! pkg-config libpcre --atleast-version 8.34 ; then
-# Only apply when system libpcre < 8.34
-#%patch301 -p1 -b .pcre834
-#fi
-#%endif
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1793,6 +1785,14 @@ fi
 
 
 %changelog
+* Fri Aug 19 2016 Jacob Perkins <jacob.perkins@cpanel.net> - 7.0.10-1
+- Updated to version 7.0.10 via update_pkg.pl (EA-5085)
+
+* Thu Jul 28 2016 S. Kurt Newman <kurt.newman@cpanel.net> - 7.0.9-2
+- Removed reference to unused patches.
+- Used prior choon.net mail-header patch as a basis for updating
+  it with PHP 7 compatibility (EA-4199).
+
 * Thu Jul 21 2016 Edwin Buck <e.buck@cpanel.net> - 7.0.9-1
 - Updated to version 7.0.9 (EA-4819)
 
