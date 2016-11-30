@@ -143,7 +143,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  7.0.13
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 2
+%define release_prefix 3
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1122,7 +1122,6 @@ ln -sf ../configure
     --enable-gd-native-ttf \
     --without-gdbm \
     --with-gettext \
-    --with-gmp \
     --with-iconv \
     --with-jpeg-dir=%{_root_prefix} \
     --with-openssl \
@@ -1136,7 +1135,6 @@ ln -sf ../configure
     --enable-sockets \
     --with-kerberos \
     --enable-shmop \
-    --enable-calendar \
     --with-libxml-dir=%{_root_prefix} \
     --with-system-tzdata \
     --with-mhash \
@@ -1257,7 +1255,8 @@ without_shared="--without-gd \
       --disable-simplexml --disable-exif --without-gettext \
       --without-iconv --disable-ftp --without-bz2 --disable-ctype \
       --disable-shmop --disable-sockets --disable-tokenizer \
-      --disable-sysvmsg --disable-sysvshm --disable-sysvsem"
+      --disable-sysvmsg --disable-sysvshm --disable-sysvsem \
+      --without-gmp --disable-calendar"
 
 %if %{with_httpd}
 # Build Apache module, and the CLI SAPI, /usr/bin/php
@@ -1788,8 +1787,11 @@ fi
 %files zip -f files.zip
 %endif
 
-
 %changelog
+* Fri Nov 18 2016 S. Kurt Newman <kurt.newman@cpanel.net> - 7.0.13-3
+- Ensure the same extensions are compiled statically across all
+  SAPI types (EA-5587)
+
 * Thu Nov 17 2016 Edwin Buck <e.buck@cpanel.net> - 7.0.13-2
 - Make php-cli require php-litespeed
 
