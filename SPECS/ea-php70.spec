@@ -143,7 +143,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  7.0.13
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 3
+%define release_prefix 4
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1788,6 +1788,9 @@ fi
 %endif
 
 %changelog
+* Fri Nov 18 2016 Matt Dees <matt.dees@cpanel.net> 7.0.13-4
+- Fix erronous getpwnam message in php-fpm jailshell code
+
 * Fri Nov 18 2016 S. Kurt Newman <kurt.newman@cpanel.net> - 7.0.13-3
 - Ensure the same extensions are compiled statically across all
   SAPI types (EA-5587)
