@@ -141,9 +141,9 @@
 Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
-Version:  7.0.13
+Version:  7.0.14
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 5
+%define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1778,6 +1778,9 @@ fi
 %endif
 
 %changelog
+* Mon Dec 12 2016 Jacob Perkins <jacob.perkins@cpanel.net> - 7.0.14-1
+- Updated to version 7.0.14 via update_pkg.pl (EA-5753)
+
 * Mon Dec 05 2016 Dan Muey <dan@cpanel.net> - 7.0.13-5
 - EA-3685: do not create apache user/group since we use nobody
 
