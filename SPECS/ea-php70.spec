@@ -141,7 +141,7 @@
 Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
-Version:  7.0.14
+Version:  7.0.15
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
 %define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
@@ -1778,6 +1778,9 @@ fi
 %endif
 
 %changelog
+* Thu Jan 19 2017 Daniel Muey <dan@cpanel.net> - 7.0.15-1
+- Updated to version 7.0.15 via update_pkg.pl (EA-5872)
+
 * Mon Dec 12 2016 Jacob Perkins <jacob.perkins@cpanel.net> - 7.0.14-1
 - Updated to version 7.0.14 via update_pkg.pl (EA-5753)
 
