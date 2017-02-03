@@ -143,7 +143,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  7.0.15
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 1
+%define release_prefix 2
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1778,6 +1778,9 @@ fi
 %endif
 
 %changelog
+* Thu Jan 26 2017 Dan Muey <dan@cpanel.net> - 7.0.15-2
+- EA-5839: Add opcache.validate_permission to opcache ini
+
 * Thu Jan 19 2017 Daniel Muey <dan@cpanel.net> - 7.0.15-1
 - Updated to version 7.0.15 via update_pkg.pl (EA-5872)
 
