@@ -144,7 +144,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  7.0.15
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 4
+%define release_prefix 5
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -191,7 +191,6 @@ Patch101: php-7.x-disable-zts.cpanel.patch
 Patch102: php-7.0.x-ea4-ini.patch
 Patch104: php-7.0.x-fpm-user-ini-docroot.patch
 Patch105: php-7.0.x-fpm-jailshell.patch
-Patch106: php-7.0.x-configure-command.patch
 
 BuildRequires: bzip2-devel, curl-devel >= 7.9, %{db_devel}
 BuildRequires: pam-devel
@@ -952,7 +951,6 @@ inside them.
 %patch102 -p1 -b .cpanelea4ini
 %patch104 -p1 -b .fpmuserini
 %patch105 -p1 -b .fpmjailshell
-%patch106 -p1 -b .configure_command
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1780,6 +1778,9 @@ fi
 %endif
 
 %changelog
+* Wed Feb 08 2017 Dan Muey <dan@cpanel.net> - 7.0.15-5
+- EA-5863: Remove patch from 7.0.12-2 as it adds duplicate info
+
 * Mon Feb 06 2017 Dan Muey <dan@cpanel.net> - 7.0.15-4
 - EA-5946: force requirement of ea-libtidy instead of .so from BuildRequires ea-libtidy-devel
 
