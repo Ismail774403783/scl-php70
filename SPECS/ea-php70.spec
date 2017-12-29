@@ -1135,7 +1135,7 @@ ln -sf ../configure
     --enable-sockets \
     --with-kerberos \
     --enable-shmop \
-    --with-libxml-dir=/opt/cpanel/ea-libxml2
+    --with-libxml-dir=/opt/cpanel/ea-libxml2 \
     --with-system-tzdata \
     --with-mhash \
 %if %{with_dtrace}
