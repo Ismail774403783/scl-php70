@@ -143,7 +143,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  7.0.27
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 2
+%define release_prefix 3
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -251,7 +251,7 @@ Requires: %{?scl_prefix}php-cli%{?_isa} = %{version}-%{release}
 
 %description
 %if %{with_httpd}
-Package that installs Apache's mod_php DSO module for PHP 7.0 
+Package that installs Apache's mod_php DSO module for PHP 7.0
 %else
 PHP is an HTML-embedded scripting language. PHP attempts to make it
 easy for developers to write dynamically generated web pages. PHP also
@@ -664,7 +664,7 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
-BuildRequires: libxml2-devel
+BuildRequires: ea-libxml2-devel
 
 %description soap
 The %{?scl_prefix}php-soap package contains a dynamic shared object that will add
@@ -736,7 +736,7 @@ Provides: %{?scl_prefix}php-xmlreader = %{version}-%{release}, %{?scl_prefix}php
 Provides: %{?scl_prefix}php-xmlwriter = %{version}-%{release}, %{?scl_prefix}php-xmlwriter%{?_isa} = %{version}-%{release}
 Provides: %{?scl_prefix}php-xsl = %{version}-%{release}, %{?scl_prefix}php-xsl%{?_isa} = %{version}-%{release}
 Provides: %{?scl_prefix}php-simplexml = %{version}-%{release}, %{?scl_prefix}php-simplexml%{?_isa} = %{version}-%{release}
-BuildRequires: libxslt-devel >= 1.0.18-1, libxml2-devel >= 2.4.14-1
+BuildRequires: libxslt-devel >= 1.0.18-1, ea-libxml2-devel >= 2.4.14-1
 
 %description xml
 The %{?scl_prefix}php-xml package contains dynamic shared objects which add support
@@ -1135,7 +1135,7 @@ ln -sf ../configure
     --enable-sockets \
     --with-kerberos \
     --enable-shmop \
-    --with-libxml-dir=%{_root_prefix} \
+    --with-libxml-dir=/opt/cpanel/ea-libxml2 \
     --with-system-tzdata \
     --with-mhash \
 %if %{with_dtrace}
@@ -1788,6 +1788,9 @@ fi
 %endif
 
 %changelog
+* Thu Jan 11 2018 Cory McIntire <cory@cpanel.net> - 7.0.27-3
+- EA-7044: Adjust PHPs to use ea-libxml2
+
 * Tue Jan 09 2018 Julian Brown <julian.brown@cpanel.net> - 7.0.27.2
 - HB-3061: Fix epoll bug.
 
@@ -1797,7 +1800,7 @@ fi
 * Sun Nov 26 2017 Cory McIntire <cory@cpanel.net> - 7.0.26-1
 - Updated to version 7.0.26 via update_pkg.pl (ZC-3095)
 
-* Mon Nov 06 2017 <dan@cpanel.net> - 7.0.25-2
+* Mon Nov 06 2017 Dan Muey <dan@cpanel.net> - 7.0.25-2
 - EA-6812: build PHP against ea-openssl like Apache
 
 * Fri Oct 27 2017 Jacob Perkins <jacob.perkins@cpanel.net> - 7.0.25-1
