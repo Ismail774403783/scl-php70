@@ -1788,7 +1788,7 @@ fi
 %endif
 
 %changelog
-* Thu Jan 12 2018 <darren@cpanel.net> - 7.0.27-4
+* Fri Jan 12 2018 <darren@cpanel.net> - 7.0.27-4
 - HB-3263: Ensure securetmp is done before starting FPM
 
 * Thu Jan 11 2018 Cory McIntire <cory@cpanel.net> - 7.0.27-3
