@@ -144,7 +144,7 @@ Summary:  PHP DSO
 %endif
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
-Version:  7.0.30
+Version:  7.0.31
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
 %define release_prefix 2
 Release: %{release_prefix}%{?dist}.cpanel
@@ -1727,6 +1727,11 @@ fi
 %{_mandir}/man8/php-fpm.8*
 %dir %{_datadir}/fpm
 %{_datadir}/fpm/status.html
+%dir %{_sysconfdir}/sysconfig
+%dir %{_sbindir}
+%dir %{_mandir}/man8
+%dir %{_localstatedir}/log
+%dir %{_localstatedir}/run
 %endif
 
 %if %{with_lsws}
@@ -1808,6 +1813,12 @@ fi
 %endif
 
 %changelog
+* Wed Jul 23 2018 Tim Mullin <tim@cpanel.net> - 7.0.31-2
+- Fixed php-fpm installing directories it does not own (EA-7526)
+
+* Thu Jul 19 2018 Cory McIntire <cory@cpanel.net> - 7.0.31-1
+- Updated to version 7.0.31 via update_pkg.pl (EA-7711)
+
 * Tue Jun 5 2018 Rishwanth Yeddula <rish@cpanel.net> - 7.0.30-2
 - EA-7359: Ensure ea-libxml2 is listed as a requirement for the php-xml package.
 
