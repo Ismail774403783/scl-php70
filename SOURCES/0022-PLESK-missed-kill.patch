@@ -1,0 +1,26 @@
+From 1166b4d67a37207f2c17573071d8af7eb96f6967 Mon Sep 17 00:00:00 2001
+From: Julian Brown <julian.brown@cpanel.net>
+Date: Tue, 7 May 2019 13:17:43 -0500
+Subject: [PATCH 3/3] 0022-PLESK-missed-kill
+
+Third of 3 signal managment patches for PHP-FPM.
+---
+ sapi/fpm/fpm/fpm_process_ctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sapi/fpm/fpm/fpm_process_ctl.c b/sapi/fpm/fpm/fpm_process_ctl.c
+index ae5deb1f..bdf0734f 100644
+--- a/sapi/fpm/fpm/fpm_process_ctl.c
++++ b/sapi/fpm/fpm/fpm_process_ctl.c
+@@ -59,7 +59,7 @@ static void fpm_pctl_action(struct fpm_event_s *ev, short which, void *arg) /* {
+ 
+ static int fpm_pctl_timeout_set(int sec) /* {{{ */
+ {
+-	fpm_event_set_timer(&pctl_event, 0, &fpm_pctl_action, NULL);
++	fpm_event_set_timer(&pctl_event, FPM_EV_PERSIST, &fpm_pctl_action, NULL);
+ 	fpm_event_add(&pctl_event, sec * 1000);
+ 	return 0;
+ }
+-- 
+2.21.0
+

@@ -146,7 +146,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  7.0.33
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 5
+%define release_prefix 6
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -195,6 +195,10 @@ Patch102: php-7.0.x-ea4-ini.patch
 Patch104: php-7.0.x-fpm-user-ini-docroot.patch
 Patch105: php-7.0.x-fpm-jailshell.patch
 Patch200: php-fpm.epoll.patch
+
+Patch400: 0020-PLESK-sig-block-reexec.patch
+Patch401: 0021-PLESK-avoid-child-ignorance.patch
+Patch402: 0022-PLESK-missed-kill.patch
 
 BuildRequires: bzip2-devel, %{ns_name}-libcurl >= %{ea_libcurl_ver}, %{ns_name}-libcurl-devel >= %{ea_libcurl_ver}, %{db_devel}
 BuildRequires: pam-devel
@@ -962,6 +966,10 @@ inside them.
 %patch105 -p1 -b .fpmjailshell
 %patch200 -p1 -b .fpmepoll
 sed -i 's/buffio.h/tidybuffio.h/' ext/tidy/*.c
+
+%patch400 -p1 
+%patch401 -p1 
+%patch402 -p1 
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1814,6 +1822,9 @@ fi
 %endif
 
 %changelog
+* Tue May 07 2019 Julian Brown <julian.brown@cpanel.net> - 7.0.33-6
+- ZC-5064: Add PLESK signal managment to PHP-FPM
+
 * Thu Apr 25 2019 Daniel Muey <dan@cpanel.net> - 7.0.33-5
 - ZC-5036: Add find-latest-version (assumes PHP is checked out next ro ea-tools)
 
