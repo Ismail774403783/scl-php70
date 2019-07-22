@@ -146,7 +146,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  7.0.33
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 8
+%define release_prefix 9
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -157,7 +157,7 @@ URL:      http://www.php.net/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0: http://www.php.net/distributions/php-%{version}%{?rcver}.tar.bz2
-Source1: https://www.litespeedtech.com/packages/lsapi/php-litespeed-7.4.2.tgz
+Source1: https://www.litespeedtech.com/packages/lsapi/php-litespeed-7.5.tgz
 Source2: php.ini
 Source3: macros.php
 Source4: php-fpm.conf
@@ -1822,6 +1822,9 @@ fi
 %endif
 
 %changelog
+* Mon Jul 22 2019 Cory McIntire <cory@cpanel.net> - 7.0.33-9
+- EA-8576: Update litespeed from upstream to 7.5
+
 * Mon Jul 08 2019 Cory McIntire <cory@cpanel.net> - 7.0.33-8
 - EA-8558: Update litespeed from upstream to 7.4.2
 
